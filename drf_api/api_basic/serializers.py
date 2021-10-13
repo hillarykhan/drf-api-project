@@ -10,7 +10,7 @@ class ArticleSerializer(serializers.Serializer):
     def create(self, validated_data):
         return Article.objects.create(validated_data)
 
-    def update(self, validated_data):
+    def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.author = validated_data.get('author', instance.author)
         instance.email = validated_data.get('email', instance.email)
