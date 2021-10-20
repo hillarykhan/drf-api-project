@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from rest_framework import authentication
 from rest_framework.parsers import JSONParser
 from .models import Article
 from .serializers import ArticleSerializer
@@ -9,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -17,6 +20,8 @@ class GenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.Crea
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
     lookup_field = 'id'
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id=None):
         if id:
