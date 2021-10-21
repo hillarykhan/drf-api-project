@@ -17,35 +17,38 @@ from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
-class ArticleViewSet(viewsets.ViewSet):
-    lookup_field = 'id'
+class ArticleViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+    serializer_class = ArticleSerializer
+    queryset = Article.objects.all()
 
-    def list(self, request):
-        articles = Article.objects.all()
-        serializer = ArticleSerializer(articles, many=True)
-        return Response(serializer.data)
+    # lookup_field = 'id'
 
-    def create(self, request):
-        serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def list(self, request):
+    #     articles = Article.objects.all()
+    #     serializer = ArticleSerializer(articles, many=True)
+    #     return Response(serializer.data)
 
-    def retrieve(self, request, id=None):
-        queryset = Article.objects.all()
-        article = get_object_or_404(queryset, id=id)
-        serializer = ArticleSerializer(article)
-        return Response(serializer.data)
+    # def create(self, request):
+    #     serializer = ArticleSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, id=None):
-        article = Article.objects.get(id=id)
-        serializer = ArticleSerializer(article, data=request.data)
+    # def retrieve(self, request, id=None):
+    #     queryset = Article.objects.all()
+    #     article = get_object_or_404(queryset, id=id)
+    #     serializer = ArticleSerializer(article)
+    #     return Response(serializer.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # def update(self, request, id=None):
+    #     article = Article.objects.get(id=id)
+    #     serializer = ArticleSerializer(article, data=request.data)
+
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
